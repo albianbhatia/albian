@@ -1,0 +1,28 @@
+#!/bin/bash
+PublicDNS=`head -1 /var/lib/jenkins/sharedspace/dns.txt`
+sleep 66
+echo "http://$PublicDNS:8080" > /var/lib/jenkins/email-templates/publicDNS.template
+echo "$StackName" > /var/lib/jenkins/email-templates/cloudformationstack.template
+ 
+if [ "$userAWSENV" == "t2.micro" ]
+then
+  echo "Model = t2.micro <br />vCPU = 1 <br />CPU Credits/hour = 6 <br />Memory (GiB) = 1" > /var/lib/jenkins/email-templates/AWSEC2details.template
+  
+elif [ "$userAWSENV" == "t2.small" ]
+then
+
+ echo "Model = t2.small <br />vCPU = 1 <br />CPU Credits/hour = 12 <br />Memory (GiB) = 2" > /var/lib/jenkins/email-templates/AWSEC2details.template
+ 
+else
+
+  echo "Model = t2.medium <br />vCPU = 2 <br />CPU Credits/hour = 24 <br />Memory (GiB) = 4" > /var/lib/jenkins/email-templates/AWSEC2details.template
+
+fi
+
+ansible-playbook -vv -e "ip_from_ec2=$PublicDNS" /var/lib/jenkins/sharedspace/pipeline-scripts/site.yml --private-key /var/lib/jenkins/sharedspace/DevOpsPOC.pem
+
+if [ $? -ne 0 ]; then
+	exit 1
+fi
+
+echo " You can access the petclinic APP from URL http://$PublicDNS:8080 "

@@ -1,0 +1,5 @@
+#!/bin/bash
+pubDNS=_PublicDNS
+varPub=$StackName$pubDNS
+echo ${!varPub} > /var/lib/jenkins/sharedspace/dns.txt
+echo "StackName_PublicDNS is ${!varPub}"

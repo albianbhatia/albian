@@ -1,0 +1,13 @@
+echo $emailID > /var/lib/jenkins/email-templates/recipients.template
+echo $requestNo > /var/lib/jenkins/email-templates/requstno.template
+echo "userAWSENV=$userAWSENV" > /var/lib/jenkins/sharedspace/userAWSENV.properties
+
+CFStackName="ServiceNowCloudformationEC2Provision"
+
+CFStackName=$CFStackName$BUILD_NUMBER 
+
+echo "StackName=$CFStackName" >> /var/lib/jenkins/sharedspace/userAWSENV.properties
+
+echo "emailID is $emailID"
+echo "requestNo is $requestNo"
+echo "userAWSENV is $userAWSENV"
